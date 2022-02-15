@@ -36,7 +36,8 @@ class TapGateway extends Curl implements PaymentInterface
             $result->status = $returned->response['status'] == 'CAPTURED' || $returned->response['status'] == 'APPROVED';
             return $result;
         } catch (\Exception $e) {
-            \Log::error("Error while charging card.\nData:\n" . json_encode($data) . "\nGenerated result:\n" . json_encode($result) . "\nError:\n" . json_encode($e));
+            $result =
+            \Log::error("Error while charging card.\nData:\n" . json_encode($data) . "\nError:\n" . json_encode($e));
             abort(500, 'Something went wrong while processing payment');
         }
     }
