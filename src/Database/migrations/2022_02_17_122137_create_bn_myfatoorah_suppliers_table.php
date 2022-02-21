@@ -26,7 +26,7 @@ class CreateBnMyfatoorahSuppliersTable extends Migration
             $table->string('bank_account')->nullable();
             $table->string('supplier_code')->nullable();
             $table->string('iban')->nullable();
-            $table->boolean('is_active')->default('false');
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
