@@ -2,6 +2,7 @@
 
 
 namespace beinmedia\payment\Services;
+
 use beinmedia\payment\models\MyFatoorah;
 use beinmedia\payment\models\MyFatoorahRefund;
 use beinmedia\payment\Parameters\MyFatoorah\SupplierParam;
@@ -13,7 +14,7 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
 
     public function __construct()
     {
-        if (env('MYFATOORAH_TEST_MODE')== true) {
+        if (env('MYFATOORAH_TEST_MODE') == true) {
             $this->baseURL = "https://apitest.myfatoorah.com/v2";
         } else {
             $this->baseURL = "https://api.myfatoorah.com/v2";
@@ -22,17 +23,18 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
 
 
     //return all payment methods available for the account
-    public function getMyFatoorahPaymentMethods($invoiceAmount,$currency){
+    public function getMyFatoorahPaymentMethods($invoiceAmount, $currency)
+    {
 
-        $data= new \stdClass();
-        $data->InvoiceAmount=$invoiceAmount;
-        $data->CurrencyIso=$currency;
+        $data = new \stdClass();
+        $data->InvoiceAmount = $invoiceAmount;
+        $data->CurrencyIso = $currency;
         $data = json_encode($data);
 
-        $result=$this->postCurl(($this->baseURL."/InitiatePayment"),$data,env('MYFATOORAH_API_KEY'));
+        $result = $this->postCurl(($this->baseURL . "/InitiatePayment"), $data, env('MYFATOORAH_API_KEY'));
 
-        $response=$result->response;
-        $err=$result->err;
+        $response = $result->response;
+        $err = $result->err;
 
         $response = json_decode($response, true);
 
@@ -52,32 +54,33 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
     }
 
 
-    public function generatePaymentURL($paymentParameters){
+    public function generatePaymentURL($paymentParameters)
+    {
 
         //create object to be converted to request body
-        $data=new MyfatoorahParam();
-        $data->PaymentMethodId=$paymentParameters->paymentMethodId;
-        $data->InvoiceValue=$paymentParameters->amount;
-        $data->CallBackUrl=$paymentParameters->returnURL;
-        $data->ErrorUrl=$paymentParameters->cancelURL;
-        if($paymentParameters->trackId!=null){
-            $data->CustomerReference=$paymentParameters->trackId;
+        $data = new MyfatoorahParam();
+        $data->PaymentMethodId = $paymentParameters->paymentMethodId;
+        $data->InvoiceValue = $paymentParameters->amount;
+        $data->CallBackUrl = $paymentParameters->returnURL;
+        $data->ErrorUrl = $paymentParameters->cancelURL;
+        if ($paymentParameters->trackId != null) {
+            $data->CustomerReference = $paymentParameters->trackId;
         }
-        if(($paymentParameters->currency)<>null){
-            $data->DisplayCurrencyIso=$paymentParameters->currency;
+        if (($paymentParameters->currency) <> null) {
+            $data->DisplayCurrencyIso = $paymentParameters->currency;
         }
-        if(($paymentParameters->name)<>null){
-            $data->CustomerName=$paymentParameters->name;
+        if (($paymentParameters->name) <> null) {
+            $data->CustomerName = $paymentParameters->name;
         }
-        if(($paymentParameters->email)<>null){
-            $data->CustomerEmail=$paymentParameters->email;
+        if (($paymentParameters->email) <> null) {
+            $data->CustomerEmail = $paymentParameters->email;
         }
-        $data=json_encode($data);
+        $data = json_encode($data);
 
 
-        $result=$this->postCurl(($this->baseURL."/ExecutePayment"),$data,env('MYFATOORAH_API_KEY'));
-        $response=$result->response;
-        $err=$result->err;
+        $result = $this->postCurl(($this->baseURL . "/ExecutePayment"), $data, env('MYFATOORAH_API_KEY'));
+        $response = $result->response;
+        $err = $result->err;
         $response = json_decode($response, true);
 
         if ($err) {
@@ -99,13 +102,12 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
                     $payment->save();
 
                     return $response["Data"]["PaymentURL"];
-                }catch (\Exception $e){
-                    \Log::error("Error while generating myfatoorah payment url.\nData:\n".json_encode($data)."\nResponse:\n".json_encode($response['data'])."\nErrors:\n" . json_encode($e));
+                } catch (\Exception $e) {
+                    \Log::error("Error while generating myfatoorah payment url.\nData:\n" . json_encode($data) . "\nResponse:\n" . json_encode($response['data']) . "\nErrors:\n" . json_encode($e));
                     abort(500, 'Something went wrong while processing payment');
                 }
 
-            }
-            else {
+            } else {
                 \Log::error("Validation errors while generating payment url.\nData:\n$data\nErrors:\n" . json_encode($response));
                 abort(500, 'Something went wrong while processing payment');
             }
@@ -117,18 +119,19 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
     //tested for knet gateway
     //not working mastercard
     //tested for visa card
-    public function isPaymentExecuted($paymentId=null){
+    public function isPaymentExecuted($paymentId = null)
+    {
 
-        $data=new \stdClass();
-        $data->KeyType=is_null($paymentId)?"PaymentId":"InvoiceId";
-        $paymentId=$paymentId ?? request('paymentId');
-        $data->Key="$paymentId";
+        $data = new \stdClass();
+        $data->KeyType = is_null($paymentId) ? "PaymentId" : "InvoiceId";
+        $paymentId = $paymentId ?? request('paymentId');
+        $data->Key = "$paymentId";
         $data = json_encode($data);
 
-        $result=$this->postCurl(($this->baseURL."/GetPaymentStatus"),$data,env('MYFATOORAH_API_KEY'));
-        $response=$result->response;
-        $err=$result->err;
-        $responseData=$response;
+        $result = $this->postCurl(($this->baseURL . "/GetPaymentStatus"), $data, env('MYFATOORAH_API_KEY'));
+        $response = $result->response;
+        $err = $result->err;
+        $responseData = $response;
         $response = json_decode($response, true);
 
         if ($err) {
@@ -161,7 +164,7 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
 
                 $returnResponse->status = false;
                 return $returnResponse;
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 \Log::error("Error while generating myfatoorah payment url.\nData:\n$data\nErrors:\n" . json_encode($response));
                 abort(500, 'Something went wrong while processing payment');
             }
@@ -174,29 +177,36 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
      * @param SupplierParam $data
      * @return mixed|void
      */
-    public function createBusiness(SupplierParam $data)
+    public function createBusiness(SupplierParam $supplierParam)
     {
-        $requestData = new SupplierParam();
-        $result = $this->postCurl(($this->baseURL."/CreateSupplier"),$data,env('MYFATOORAH_API_KEY'));
-        $err = $result->err;
-        $response = $result->response;
-        $response = json_decode($response, true);
-        if ($err) {
-            \Log::error("Curl error while creating tap vendor.\nError:\n" . json_encode($err));
-            abort(500, 'Something went wrong while creating Vendor');
-        } else {
-            try {
-                return $response;
-            } catch (\Exception $e) {
-                \Log::error("Error while creating tap vendor.\nProvided Data:\n" . json_encode($data) . "\nRequest Data:\n" . json_encode($requestData) . "\nTap response:\n" . json_encode($response) . "\nError:\n" . json_encode($e));
-                abort(500, 'Something went wrong while creating vendor');
+        try {
+            $result = $this->postCurl(($this->baseURL . "/CreateSupplier"), json_encode($supplierParam), env('MYFATOORAH_API_KEY'));
+            $err = $result->err;
+            $response = $result->response;
+            $response = json_decode($response, true);
+            if ($err) {
+                \Log::error("Curl error while creating tap vendor.\nError:\n" . json_encode($err));
+                abort(500, 'Something went wrong while creating Vendor');
+            } else {
+                if (isset($response["IsSuccess"]) && $response["IsSuccess"]) {
+                    return $response;
+                } else {
+                    \Log::error("Validation errors while creating Myfatoora supplier.\nErrors:\n" . json_encode($response));
+                    abort(500, 'Something went wrong while creating Myfatoora supplier');
+                }
+
             }
+        } catch (\Exception $e) {
+            \Log::error("Error while creating tap vendor.\nProvided Data:\n" . json_encode($supplierParam)  .  "\nError:\n" . json_encode($e));
+            abort(500, 'Something went wrong while creating vendor');
         }
     }
+
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    public function getPayment($invoice_Id){
-        return MyFatoorah::where('invoice_id',$invoice_Id)->first();
+    public function getPayment($invoice_Id)
+    {
+        return MyFatoorah::where('invoice_id', $invoice_Id)->first();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,10 +263,10 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
                         "refund_reference" => $response['Data']['RefundReference'],
                         "customer_reference" => $invoice->customer_reference,
                     ]);
-                    return compact('refund') + ['success'=> true, 'errors' => null];
-                } else{
+                    return compact('refund') + ['success' => true, 'errors' => null];
+                } else {
                     \Log::error("Error while processing refund.\nRequest Data:\n" . json_encode($data) . "\nResponse:\n" . json_encode($response));
-                    return ['success'=> false, 'errors' => $response['ValidationErrors'] ?? null, 'refund' => null];
+                    return ['success' => false, 'errors' => $response['ValidationErrors'] ?? null, 'refund' => null];
                 }
             } catch (\Exception $e) {
                 \Log::error("Error while processing refund.\nRequest Data:\n" . json_encode($data) . "\nResponse:\n" . json_encode($response) . "\nError:\n" . $e->getMessage());
