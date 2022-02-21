@@ -4,6 +4,7 @@
 namespace beinmedia\payment\Services;
 use beinmedia\payment\models\MyFatoorah;
 use beinmedia\payment\models\MyFatoorahRefund;
+use beinmedia\payment\Parameters\MyFatoorah\SupplierParam;
 use beinmedia\payment\Parameters\MyfatoorahParam;
 
 class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\PaymentInterface
@@ -169,7 +170,29 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
 
     }
 
-
+    /**
+     * @param SupplierParam $data
+     * @return mixed|void
+     */
+    public function createBusiness(SupplierParam $data)
+    {
+        $requestData = new SupplierParam();
+        $result = $this->postCurl(($this->baseURL."/CreateSupplier"),$data,env('MYFATOORAH_API_KEY'));
+        $err = $result->err;
+        $response = $result->response;
+        $response = json_decode($response, true);
+        if ($err) {
+            \Log::error("Curl error while creating tap vendor.\nError:\n" . json_encode($err));
+            abort(500, 'Something went wrong while creating Vendor');
+        } else {
+            try {
+                return $response;
+            } catch (\Exception $e) {
+                \Log::error("Error while creating tap vendor.\nProvided Data:\n" . json_encode($data) . "\nRequest Data:\n" . json_encode($requestData) . "\nTap response:\n" . json_encode($response) . "\nError:\n" . json_encode($e));
+                abort(500, 'Something went wrong while creating vendor');
+            }
+        }
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     public function getPayment($invoice_Id){
