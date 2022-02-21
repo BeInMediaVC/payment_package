@@ -18,15 +18,15 @@ class CreateBnMyfatoorahSuppliersTable extends Migration
             $table->string("supplier_name");
             $table->string("mobile");
             $table->string('email');
-            $table->double('commission_value');
-            $table->string('Commission_percentage');
-            $table->string('deposit_terms');
-            $table->string('bank_id');
-            $table->string('bank_account_holder_name');
-            $table->string('bank_account');
-            $table->string('supplier_code');
-            $table->string('iban');
-            $table->boolean('is_active');
+            $table->double('commission_value')->nullable();
+            $table->string('Commission_percentage')->nullable();
+            $table->string('deposit_terms')->nullable();
+            $table->string('bank_id')->nullable();
+            $table->string('bank_account_holder_name')->nullable();
+            $table->string('bank_account')->nullable();
+            $table->string('supplier_code')->nullable();
+            $table->string('iban')->nullable();
+            $table->boolean('is_active')->default('false');
             $table->timestamps();
         });
     }
