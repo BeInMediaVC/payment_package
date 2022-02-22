@@ -56,15 +56,11 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
 
     public function generatePaymentURL(MyfatoorahParam $myfatoorahParam)
     {
-
-
         $data = json_encode($myfatoorahParam);
-
         $result = $this->postCurl(($this->baseURL . "/ExecutePayment"), $data, env('MYFATOORAH_API_KEY'));
         $response = $result->response;
         $err = $result->err;
         $response = json_decode($response, true);
-
         if ($err) {
             \Log::error("Curl error while generating myfatoorah payment url.\nError:\n" . json_encode($err));
             abort(500, 'Something went wrong while processing payment');
