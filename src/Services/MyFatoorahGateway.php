@@ -54,29 +54,11 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
     }
 
 
-    public function generatePaymentURL($paymentParameters)
+    public function generatePaymentURL(MyfatoorahParam $myfatoorahParam)
     {
 
-        //create object to be converted to request body
-        $data = new MyfatoorahParam();
-        $data->PaymentMethodId = $paymentParameters->paymentMethodId;
-        $data->InvoiceValue = $paymentParameters->amount;
-        $data->CallBackUrl = $paymentParameters->returnURL;
-        $data->ErrorUrl = $paymentParameters->cancelURL;
-        if ($paymentParameters->trackId != null) {
-            $data->CustomerReference = $paymentParameters->trackId;
-        }
-        if (($paymentParameters->currency) <> null) {
-            $data->DisplayCurrencyIso = $paymentParameters->currency;
-        }
-        if (($paymentParameters->name) <> null) {
-            $data->CustomerName = $paymentParameters->name;
-        }
-        if (($paymentParameters->email) <> null) {
-            $data->CustomerEmail = $paymentParameters->email;
-        }
-        $data = json_encode($data);
 
+        $data = json_encode($myfatoorahParam);
 
         $result = $this->postCurl(($this->baseURL . "/ExecutePayment"), $data, env('MYFATOORAH_API_KEY'));
         $response = $result->response;
@@ -98,15 +80,12 @@ class MyFatoorahGateway extends Curl implements \beinmedia\payment\Services\Paym
                     $payment->payment_method_id = $data->PaymentMethodId;
                     $payment->customer_name = $data->CustomerName ?: null;
                     $payment->customer_email = $data->CustomerEmail ?: null;
-
                     $payment->save();
-
                     return $response["Data"]["PaymentURL"];
                 } catch (\Exception $e) {
                     \Log::error("Error while generating myfatoorah payment url.\nData:\n" . json_encode($data) . "\nResponse:\n" . json_encode($response['data']) . "\nErrors:\n" . json_encode($e));
                     abort(500, 'Something went wrong while processing payment');
                 }
-
             } else {
                 \Log::error("Validation errors while generating payment url.\nData:\n$data\nErrors:\n" . json_encode($response));
                 abort(500, 'Something went wrong while processing payment');
