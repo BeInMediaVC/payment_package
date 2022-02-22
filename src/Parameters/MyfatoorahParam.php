@@ -7,6 +7,7 @@ namespace beinmedia\payment\Parameters;
 class MyfatoorahParam
 {
     public $PaymentMethodId;//integer
+    public $SessionId;//string
     public $DisplayCurrencyIso;//String
     public $MobileCountryCode;//string
     public $CustomerMobile;//string
