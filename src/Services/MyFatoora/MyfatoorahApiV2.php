@@ -126,7 +126,7 @@ class MyfatoorahApiV2 {
         //example set a local ip to host apitest.myfatoorah.com
         if ($err) {
             $this->log("$msgLog - cURL Error: $err");
-            throw new Exception($err);
+            throw new \Exception($err);
         }
 
         $this->log("$msgLog - Response: $res");
@@ -140,7 +140,7 @@ class MyfatoorahApiV2 {
         $error = $this->{"getAPIError$request"}($json, $res);
         if ($error) {
             $this->log("$msgLog - Error: $error");
-            throw new Exception($error);
+            throw new \Exception($error);
         }
 
         //***************************************
@@ -250,7 +250,7 @@ class MyfatoorahApiV2 {
         //check for the allowed length
         $len = strlen($string4);
         if ($len < 3 || $len > 14) {
-            throw new Exception('Phone Number lenght must be between 3 to 14 digits');
+            throw new \Exception('Phone Number lenght must be between 3 to 14 digits');
         }
 
         //get the phone arr
@@ -307,7 +307,7 @@ class MyfatoorahApiV2 {
         } else if ($unit1 == 'oz' || $unit1 == 'اوقية' || $unit1 == 'أوقية') {
             $rate = 0.0283495;
         } else {
-            throw new Exception('Weight units must be in kg, g, lbs, or oz. Default is kg');
+            throw new \Exception('Weight units must be in kg, g, lbs, or oz. Default is kg');
         }
 
         return $rate;
@@ -336,7 +336,7 @@ class MyfatoorahApiV2 {
         } else if ($unit1 == 'yd' || $unit1 == 'يارده' || $unit1 == 'ياردة') {
             $rate = 91.44;
         } else {
-            throw new Exception('Dimension units must be in cm, m, mm, in, or yd. Default is cm');
+            throw new \Exception('Dimension units must be in cm, m, mm, in, or yd. Default is cm');
         }
 
         return $rate;
@@ -358,7 +358,7 @@ class MyfatoorahApiV2 {
                 return $value->Value;
             }
         }
-        throw new Exception('The selected currency is not supported by MyFatoorah');
+        throw new \Exception('The selected currency is not supported by MyFatoorah');
     }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------

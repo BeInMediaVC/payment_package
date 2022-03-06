@@ -221,11 +221,11 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2 {
         }
 
         if (!isset($pm)) {
-            throw new Exception('Please contact Account Manager to enable the used payment method in your account');
+            throw new \Exception('Please contact Account Manager to enable the used payment method in your account');
         }
 
         if ($this->isDirectPayment && !$pm->IsDirectPayment) {
-            throw new Exception($pm->PaymentMethodEn . ' Direct Payment Method is not activated. Kindly, contact your MyFatoorah account manager or sales representative to activate it.');
+            throw new \Exception($pm->PaymentMethodEn . ' Direct Payment Method is not activated. Kindly, contact your MyFatoorah account manager or sales representative to activate it.');
         }
 
         return $pm;
@@ -339,7 +339,7 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2 {
         if (!$this->checkOrderInformation($json, $orderId, $price, $currncy)) {
             $err = 'Trying to call data of another order';
             $this->log("$msgLog - Exception is $err");
-            throw new Exception($err);
+            throw new \Exception($err);
         }
 
 
