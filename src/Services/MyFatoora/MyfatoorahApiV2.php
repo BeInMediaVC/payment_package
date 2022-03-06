@@ -93,7 +93,7 @@ class MyfatoorahApiV2 {
      */
     public function callAPI($url, $postFields = null, $orderId = null, $function = null) {
 
-        //to prevent json_encode adding lots of decimal digits
+        ///to prevent json_encode adding lots of decimal digits
         ini_set('precision', 14);
         ini_set('serialize_precision', -1);
 
