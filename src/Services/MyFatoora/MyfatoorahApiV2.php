@@ -94,14 +94,14 @@ class MyfatoorahApiV2
      * @return object           The response object as the result of a successful calling to the API.
      * @throws Exception        Throw exception if there is any curl error or a validation error in the MyFatoorah API endpoint URL
      */
-    public function callAPI($url, $postFields = null, $orderId = null, $function = null, $request = null)
+    public function callAPI($url, $postFields = null, $orderId = null, $function = null, $method = null)
     {
 
         ///to prevent json_encode adding lots of decimal digits
         ini_set('precision', 14);
         ini_set('serialize_precision', -1);
 
-        $request = isset($request) ?? isset($postFields) ? 'POST' : 'GET';
+        $request = $method ?? isset($postFields) ? 'POST' : 'GET';
         $fields = json_encode($postFields);
 
         $msgLog = "Order #$orderId ----- $function";
