@@ -1,7 +1,7 @@
 <?php
 
 
-namespace beinmedia\payment\Services\Parameters\MyFatoorah;
+namespace beinmedia\payment\Parameters\MyFatoorah;
 
 
 class FileParameters
