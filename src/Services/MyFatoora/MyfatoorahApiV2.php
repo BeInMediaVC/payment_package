@@ -101,7 +101,7 @@ class MyfatoorahApiV2
         ini_set('precision', 14);
         ini_set('serialize_precision', -1);
 
-        $request = $method ?? isset($postFields) ? 'POST' : 'GET';
+        $request = isset($postFields) ? 'POST' : 'GET';
         $fields = json_encode($postFields);
 
         $msgLog = "Order #$orderId ----- $function";
@@ -116,7 +116,7 @@ class MyfatoorahApiV2
         $curl = curl_init($url);
 
         curl_setopt_array($curl, array(
-            CURLOPT_CUSTOMREQUEST => $request,
+            CURLOPT_CUSTOMREQUEST => $method ?? $request,
             CURLOPT_POSTFIELDS => $fields,
             CURLOPT_HTTPHEADER => array("Authorization: Bearer $this->apiKey", 'Content-Type: application/json'),
             CURLOPT_RETURNTRANSFER => true,
