@@ -285,18 +285,34 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
     }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * create supplier account
      * @param $curlData
      * @return array
+     * @author ali shaban
      */
     public function createSupplier($curlData)
     {
 
 
         $json = $this->callAPI("$this->apiURL/v2/CreateSupplier", $curlData, 'Create supplier'); //__FUNCTION__
+
+        return ['status' => $json->Data->IsSuccess, 'supplierCode' => $json->Data->SupplierCode];
+    }
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * create supplier account
+     * @param $curlData
+     * @return array
+     * @author ali shaban
+     */
+    public function UploadSupplierDocument($curlData)
+    {
+
+
+        $json = $this->callAPI("$this->apiURL/v2/UploadSupplierDocument", $curlData, 'Upload Supplier Document'); //__FUNCTION__
 
         return ['status' => $json->Data->IsSuccess, 'supplierCode' => $json->Data->SupplierCode];
     }
