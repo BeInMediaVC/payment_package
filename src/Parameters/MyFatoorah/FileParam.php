@@ -4,7 +4,7 @@
 namespace beinmedia\payment\Parameters\MyFatoorah;
 
 
-class FileParameters
+class FileParam
 {
     public $FileUpload; //base path for file
     public $FileType; //one of the options in tap
