@@ -300,7 +300,7 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
 
         $json = $this->callAPI("$this->apiURL/v2/CreateSupplier", $curlData, 'Create supplier'); //__FUNCTION__
 
-        return ['status' => $json->Data->IsSuccess, 'supplierCode' => $json->Data->SupplierCode];
+        return ['status' => $json->IsSuccess, 'supplierCode' => $json->Data->SupplierCode];
     }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------

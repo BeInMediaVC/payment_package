@@ -183,7 +183,6 @@ class MyfatoorahApiV2
             Log::info(json_encode($err));
         }
         $json = json_decode($res);
-        Log::info(json_encode($json));
         //***************************************
         //call url
         //***************************************
