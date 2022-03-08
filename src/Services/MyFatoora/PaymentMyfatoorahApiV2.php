@@ -292,7 +292,7 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
      * @param $curlData
      * @return array
      */
-    private function createSupplier($curlData)
+    public function createSupplier($curlData)
     {
 
 
