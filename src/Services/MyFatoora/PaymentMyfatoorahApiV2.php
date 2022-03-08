@@ -314,7 +314,7 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
 
         $json = $this->callAPI("$this->apiURL/v2/UploadSupplierDocument", $curlData, 'Upload Supplier Document'); //__FUNCTION__
 
-        return ['status' => $json->Data->IsSuccess, 'supplierCode' => $json->Data->SupplierCode];
+        return ['status' => $json->IsSuccess, 'imageUrl' => $json->Message];
     }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
