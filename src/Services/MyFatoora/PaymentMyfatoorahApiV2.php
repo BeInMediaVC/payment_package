@@ -2,6 +2,8 @@
 
 namespace beinmedia\payment\Services\MyFatoora;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  *  PaymentMyfatoorahApiV2 handle the payment process of MyFatoorah API endpoints
  *
@@ -311,8 +313,7 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
     public function UploadSupplierDocument($curlData)
     {
 
-
-        $json = $this->callAPI("$this->apiURL/v2/UploadSupplierDocument", $curlData, null,'Upload Supplier Document',"PUT"); //__FUNCTION__
+        $json = $this->callAPIWithFiles("$this->apiURL/v2/UploadSupplierDocument", $curlData,'Upload Supplier Document'); //__FUNCTION__
 
         return ['status' => $json->IsSuccess, 'imageUrl' => $json->Message];
     }

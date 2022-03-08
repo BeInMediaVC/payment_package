@@ -2,6 +2,8 @@
 
 namespace beinmedia\payment\Services\MyFatoora;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class MyfatoorahApiV2 is responsible for handling calling MyFatoorah API endpoints. Also, It has necessary library functions that help in providing the correct parameters used endpoints.
  *
@@ -152,7 +154,61 @@ class MyfatoorahApiV2
         //***************************************
         return $json;
     }
+    /**
+     *
+     * @param string $url It is the MyFatoorah API endpoint URL
+     * @param array $postFields It is the array of the POST request parameters. It should be set to null if the request is GET.
+     * @param string $function It is optional. The function name that made the request. It will be used in the events logging.
+     * @return object           The response object as the result of a successful calling to the API.
+     * @throws \Exception        Throw exception if there is any curl error or a validation error in the MyFatoorah API endpoint URL
+     */
+    public function callAPIWithFiles($url, $postFields = null, $function = null )
+    {
 
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => $postFields,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer $this->apiKey",
+            ),
+        ));
+        $res = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err) {
+            Log::info(json_encode($err));
+        }
+        $json = json_decode($res);
+        Log::info(json_encode($json));
+        //***************************************
+        //call url
+        //***************************************
+        $msgLog = "$function";
+        //example set a local ip to host apitest.myfatoorah.com
+        if ($err) {
+            $this->log("$msgLog - cURL Error: $err");
+            throw new \Exception($err);
+        }
+        $this->log("$msgLog - Response: $res");
+        //***************************************
+        //check for errors
+        //***************************************
+
+        $error = $this->{"getAPIErrorPOST"}($json, $res);
+        if ($error) {
+            $this->log("$msgLog - Error: $error");
+            throw new \Exception($error);
+        }
+
+        //***************************************
+        //Success
+        //***************************************
+        return $json;
+    }
 //------------------------------------------------------------------------------
 
     /**
