@@ -33,8 +33,11 @@ class PaymentMyfatoorahApiV2 extends MyfatoorahApiV2
      * @var array
      */
     private static $paymentMethods;
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------    
+    const WEB_HOOK_EVENT_TYPE_TRANSACTIONS_STATUS_CHANGED = 1;
+    const WEB_HOOK_EVENT_TYPE_REFUND_STATUS_CHANGED = 2;
+    const WEB_HOOK_EVENT_TYPE_BALANCE_TRANSFERRED = 3;
+    const WEB_HOOK_EVENT_TYPE_SUPPLIER_STATUS_CHANGED = 4;
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * List available Payment Gateways.
